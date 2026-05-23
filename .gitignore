@@ -1,0 +1,16 @@
+target/
+data/
+.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+.env
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+public/imagens/
