@@ -1,6 +1,6 @@
 package com.dicasa.pedidos.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,11 +16,8 @@ public class UploadController {
 
     private static final String IMAGES_DIR = "./public/imagens/";
 
-    @Value("${server.port:8080}")
-    private int serverPort;
-
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("imagem") MultipartFile file) {
+    public ResponseEntity<?> upload(@RequestParam("imagem") MultipartFile file, HttpServletRequest request) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("erro", "Nenhum arquivo enviado"));
         }
@@ -33,7 +30,8 @@ public class UploadController {
             Path dest = dir.resolve(filename);
             Files.copy(file.getInputStream(), dest);
 
-            String url = "http://localhost:" + serverPort + "/imagens/" + filename;
+            String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+            String url = baseUrl + "/imagens/" + filename;
             return ResponseEntity.ok(Map.of("url", url));
         } catch (IOException e) {
             return ResponseEntity.internalServerError()

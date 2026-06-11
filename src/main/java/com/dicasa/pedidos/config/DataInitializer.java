@@ -15,7 +15,8 @@ public class DataInitializer {
     public CommandLineRunner initData(
             UsuarioRepository usuarioRepo,
             ProdutoRepository produtoRepo,
-            ConfiguracoesRepository configRepo) {
+            ConfiguracoesRepository configRepo,
+            CategoriaRepository categoriaRepo) {
         return args -> {
             // Usuário admin padrão
             if (!usuarioRepo.existsById("usuario-admin")) {
@@ -32,6 +33,18 @@ public class DataInitializer {
                 System.out.println("✅ Admin criado: usuario=admin senha=admin");
             }
 
+            // Categorias padrão
+            if (categoriaRepo.count() == 0) {
+                List<Categoria> cats = List.of(
+                    categoria("Marmitas",   "🍱", 0),
+                    categoria("Assados",    "🍗", 1),
+                    categoria("Bebidas",    "🥤", 2),
+                    categoria("Sobremesas", "🍰", 3)
+                );
+                categoriaRepo.saveAll(cats);
+                System.out.println("✅ Categorias padrão carregadas");
+            }
+
             // Produtos de exemplo
             if (produtoRepo.count() == 0) {
                 produtoRepo.saveAll(criarProdutos());
@@ -44,6 +57,15 @@ public class DataInitializer {
                 System.out.println("✅ Configurações do restaurante carregadas");
             }
         };
+    }
+
+    private Categoria categoria(String nome, String emoji, int ordem) {
+        Categoria c = new Categoria();
+        c.setNome(nome);
+        c.setEmoji(emoji);
+        c.setOrdem(ordem);
+        c.setAtivo(true);
+        return c;
     }
 
     private List<Produto> criarProdutos() {

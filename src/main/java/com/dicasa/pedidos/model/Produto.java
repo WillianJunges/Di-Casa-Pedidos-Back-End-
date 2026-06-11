@@ -26,6 +26,10 @@ public class Produto {
     @Column(name = "dia_da_semana", columnDefinition = "TEXT")
     private List<Object> diaDaSemana = new ArrayList<>();
 
+    @Convert(converter = JsonListConverter.class)
+    @Column(name = "variantes", columnDefinition = "TEXT")
+    private List<Object> variantes = new ArrayList<>();
+
     @PrePersist
     public void prePersist() {
         if (id == null || id.isBlank()) {
@@ -63,4 +67,7 @@ public class Produto {
 
     public List<Object> getDiaDaSemana() { return diaDaSemana; }
     public void setDiaDaSemana(List<Object> diaDaSemana) { this.diaDaSemana = diaDaSemana; }
+
+    public List<Object> getVariantes() { return variantes; }
+    public void setVariantes(List<Object> variantes) { this.variantes = variantes; }
 }

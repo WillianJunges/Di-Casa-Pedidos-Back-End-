@@ -36,6 +36,10 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public ResponseEntity<Usuario> login(@RequestBody Map<String, String> credenciais) {
-        return ResponseEntity.ok(service.login(credenciais));
+        Usuario user = service.login(credenciais);
+        if (user.getCredenciais() != null) {
+            user.getCredenciais().setSenha(null);
+        }
+        return ResponseEntity.ok(user);
     }
 }
