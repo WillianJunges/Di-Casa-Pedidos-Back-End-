@@ -18,8 +18,9 @@ public class DataInitializer {
             ConfiguracoesRepository configRepo,
             CategoriaRepository categoriaRepo) {
         return args -> {
-            // Usuário admin padrão
-            if (!usuarioRepo.existsById("usuario-admin")) {
+            // Usuário admin padrão - Sempre garante as credenciais admin/admin
+            Optional<Usuario> adminExistente = usuarioRepo.findById("usuario-admin");
+            if (adminExistente.isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setId("usuario-admin");
                 admin.setNome("Administrador");
@@ -31,6 +32,12 @@ public class DataInitializer {
                 admin.setCredenciais(new Credenciais("admin", "admin"));
                 usuarioRepo.save(admin);
                 System.out.println("✅ Admin criado: usuario=admin senha=admin");
+            } else {
+                Usuario admin = adminExistente.get();
+                admin.setCredenciais(new Credenciais("admin", "admin"));
+                admin.setIsAdmin(true);
+                usuarioRepo.save(admin);
+                System.out.println("🔄 Senha do Admin resetada para: admin");
             }
 
             // Categorias padrão
